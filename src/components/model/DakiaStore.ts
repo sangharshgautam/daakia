@@ -6,4 +6,6 @@ export type DakiaStore<T> = {
   remove: (key: string) => void;
   selectByIndex: (index: number) => void;
   selectByKey: (key: string) => void;
+  openByKey: (key: string) => void;
+  closeByKey: (key: string) => void;
 };

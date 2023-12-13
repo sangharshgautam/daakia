@@ -7,6 +7,7 @@ export default interface RestRequest {
   method: string;
   url?: string;
   body?: string;
+  open: boolean;
   selected: boolean;
   parameters: RestParameter[];
   response?: RestResponse;

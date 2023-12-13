@@ -1,4 +1,4 @@
-import { Button, Input } from "@fluentui/react-components";
+import { Button, Input, Checkbox } from "@fluentui/react-components";
 import { BinFullRegular, CheckmarkFilled } from "@fluentui/react-icons";
 import { FC } from "react";
 import { RestHeader } from "../../model/RestHeader";
@@ -7,6 +7,10 @@ const NameValueRow: FC<RestHeader> = ({ name, value, enabled }) => {
   const onValueChange = (value: string) => {};
   return (
     <div className="name-value-row">
+      <Checkbox
+        checked={enabled}
+        // onChange={() => setOption1((checked) => !checked)}
+      />
       <Input
         className="stretched"
         value={name}

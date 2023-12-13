@@ -1,10 +1,14 @@
 import "./Main.css";
+import "../SplitPane.css";
 import Rest from "./routes/rest/Rest";
+import Flow from "./routes/flow/Flow";
 import { HTTP_METHOD_GET, HTTP_METHOD_POST } from "./routes/rest/HttpConstants";
-import { create } from "zustand";
+import { create} from "zustand";
 import RestRequest from "./model/RestRequest";
 import { DakiaStore } from "./model/DakiaStore";
 import { uuid } from "uuidv4";
+import SplitPane from "react-split-pane";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export const usePostmanStore = create<DakiaStore<RestRequest>>((set) => ({
   requests: [],
@@ -41,6 +45,22 @@ export const usePostmanStore = create<DakiaStore<RestRequest>>((set) => ({
         i === index ? { ...req, selected: true } : { ...req, selected: false }
       )
     }));
+  },
+  openByKey: (key: string) => {
+    set((prevState) => ({
+      requests: prevState.requests.map((req) =>
+        req.key === key
+          ? { ...req, open: true, selected: true }
+          : { ...req, selected: false }
+      )
+    }));
+  },
+  closeByKey: (key: string) => {
+    set((prevState) => ({
+      requests: prevState.requests.map((req) =>
+        req.key === key ? { ...req, open: false, selected: false } : { ...req }
+      )
+    }));
   }
 }));
 usePostmanStore.setState((prevState) => ({
@@ -52,14 +72,14 @@ usePostmanStore.setState((prevState) => ({
       url: "https://echo.hoppscotch.io",
       open: true,
       selected: true,
-      parameters: [
+      parameters: [],
+      headers: [
         {
           name: "content-type",
           value: "application/json",
           enabled: true
         }
       ],
-      headers: [],
       body: JSON.stringify({
         name: "content-type",
         value: "application/json",
@@ -75,15 +95,29 @@ usePostmanStore.setState((prevState) => ({
       selected: false,
       parameters: [],
       headers: []
+    },
+    {
+      key: "3",
+      name: "Request3",
+      method: HTTP_METHOD_GET,
+      url: "https://hmrc.gov.uk",
+      open: false,
+      selected: false,
+      parameters: [],
+      headers: []
     }
   ]
 }));
 function Main() {
-  const requests = usePostmanStore((state) => state.requests);
   return (
-    <div className="main">
-      <Rest></Rest>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Rest />}>
+          <Route index element={<Rest />} />
+          <Route path="blogs" element={<Flow />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 export default Main;
